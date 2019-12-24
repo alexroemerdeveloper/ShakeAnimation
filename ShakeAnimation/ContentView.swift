@@ -8,9 +8,35 @@
 
 import SwiftUI
 
+struct Shake: GeometryEffect {
+    var amount: CGFloat = 10
+    var shakesPerUnit   = 3
+    var animatableData  : CGFloat
+    
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        ProjectionTransform(CGAffineTransform(translationX: amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)), y: 0))
+    }
+}
+
+
 struct ContentView: View {
+    @State var attempts: Int = 0
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            Spacer()
+            Rectangle()
+                .fill(Color.pink)
+                .frame(width: 200, height: 50)
+                .cornerRadius(10)
+                .modifier(Shake(animatableData: CGFloat(attempts)))
+            Button(action: {
+                withAnimation(.default) {
+                    self.attempts += 1
+                }
+            }, label: { Text("Login") })
+            Spacer()
+        }
     }
 }
 
